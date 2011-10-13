@@ -16,5 +16,5 @@ var server = net.createServer(function (socket) {
   });
 });
 
-server.listen(80, "fuuuuu.de");
+server.listen(80, "localhost");
 
