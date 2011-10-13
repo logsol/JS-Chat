@@ -13,6 +13,6 @@ Connector.prototype.connect = function(ip, port){
 }
 
 $(function () {
-  var chat = new Connector('fuuuuu.de', 80);
+  var chat = new Connector('localhost', 80);
 });
 
