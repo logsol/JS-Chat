@@ -1,0 +1,40 @@
+* {
+  font-family: arial;
+  padding: 0;
+  margin: 0;
+  font-size: .95em
+}
+#output {
+  border: 1px dotted gray;
+  width: 600px;
+  height: 300px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+}
+#users {
+  list-style-type: none;
+  border: 1px solid gray;
+  position: absolute;
+  top: 10px;
+  left: 620px;
+  width: 200px;
+  height: 300px;
+}
+#users li {
+  border-bottom: 1px dotted gray;
+  padding: 5px;
+}
+#message, #login {
+  position: absolute;
+  top: 320px;
+  left: 10px;
+}
+#text {
+  width: 600px;
+}
+#send {
+  position: absolute;
+  left: 610px;
+  top: 0;
+}
