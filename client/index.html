@@ -1,16 +1,17 @@
 <html>
 <head>
-<style type="text/css">
-* {font-family:arial;padding:2px;margin:2px;font-size:.95em}
-#output {border:1px dotted gray;width:500px;height:300px;}
-</style>
+<link rel="stylesheet" href="style.css" type="text/css">
 </head>
 <body>
-<h1>hello, it's a js chat</h1>
 <div id="chat">
-  <div id="output"></div>
+  <pre id="output"></pre>
+  <ul id="users">
+    <li>test</li>
+    <li>test2</li>
+    <li>test3</li>
+  </ul>
   <div id="login">
-    <input type="text" id="username">
+    <input type="text" id="username" value="myname">
     <button id="join">join</button>
   </div>
   <div id="message">
