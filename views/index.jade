@@ -1,0 +1,20 @@
+#chat
+  pre#output
+  ul#users
+    li test
+    li test2
+    li test3
+  #login
+    input#username(type='text', value='myname')
+    button#join join
+  #message
+    input(type='text', value='mymessage')
+    button#send send
+
+script(type='text/javascript', src='javascripts/jquery-1.6.4.min.js')
+script(type='text/javascript', src='http://node.fuuuuu.de:9999/socket.io/socket.io.js')
+script(type='text/javascript', src='javascripts/chat.js')
+script(type='text/javascript')
+  $(function(){
+    chat('node.fuuuuu.de', 9999);
+  });
