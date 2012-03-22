@@ -1,7 +1,8 @@
-var http = require('http'), io = require('socket.io');
-var server = http.createServer();
-server.listen(9999);
 
+var http = require('http')
+  , io = require('socket.io');
+  
+var server = http.createServer();
 var socket = io.listen(server);
 
 socket.on('connection', function(client){ 
@@ -14,3 +15,7 @@ socket.on('connection', function(client){
   });
 });
 
+
+exports.run = function(port){
+  server.listen(port);    
+}
