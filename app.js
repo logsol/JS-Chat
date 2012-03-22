@@ -5,7 +5,7 @@
 
 var express = require('express')
   , routes = require('./routes')
-  , chat = require('./socket/chat');
+  , chat = require('./chat');
 
 var app = module.exports = express.createServer();
 
@@ -35,4 +35,6 @@ app.get('/', routes.index);
 app.listen(8888);
 chat.run(9999);
 
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+console.log("All up and running in %s mode", app.settings.env);
+console.log("HTTP port: %s", app.address().port);
+console.log("Socket port: %s", chat.port);

@@ -9,6 +9,8 @@ function getHostName(host){
 
 exports.index = function(req, res){
     
+  console.log(req.headers.host, getHostName(req.headers.host));
+    
   var host = getHostName(req.headers.host);
   var socketPort = 9999;
     
