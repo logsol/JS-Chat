@@ -99,7 +99,7 @@ function onLogin(client, data){
         success: client.login
     });
     list(); 
-    broadcast('Welcome ' + client.name);
+    broadcast('Welcome ' + client.name + '!');
 }
 
 function onMessage(from, data){
@@ -116,7 +116,8 @@ function onDisconnect(link){
             break;
         }
     }
-    if(wasLoggedIn)
+    if(wasLoggedIn){   
         list();
         broadcast(name + ' has left.');
+    }
 }
