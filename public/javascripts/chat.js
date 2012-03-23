@@ -18,11 +18,12 @@ chat.registerEvents = function(){
     chat.registerEvent('connect', chat.onConnect);
     chat.registerEvent('login', chat.onLogin);
     chat.registerEvent('message', chat.onMessage);
-    chat.registerEvent('users', chat.onUsers);
+    chat.registerEvent('list', chat.onList);
 }
 
 chat.output = function(text){
     $('#output').append($('<p></p>').text(text));
+    $("#output").animate({ scrollTop: $("#output").prop('scrollHeight') }, "slow");
 }
 
 chat.login = function(){
@@ -34,16 +35,19 @@ chat.login = function(){
 };
 
 chat.message = function(message){
-    chat.send('message', {
-        text: message
-    });
+    if($.trim(message) !== ''){
+        chat.send('message', {
+            text: message
+        });
+    }
 }
 
 
 // Events
 
-chat.onError = function(message){
-    $('#hint').text('ERROR: ' + message);
+chat.onError = function(data){
+    data = JSON.parse(data);
+    $('#hint').text('ERROR: ' + data.message);
 };
 
 chat.onClose = function(){
@@ -55,29 +59,44 @@ chat.onConnect = function(){
     $('#hint').text('connected');
     $('#username').focus();
     $('#join').click(chat.login);
+    $('#username').keyup(function (e){
+        if(e.keyCode == 13){
+            chat.login();
+        }
+    });
 };
 
 chat.onLogin = function(data) {
     data = JSON.parse(data);
-    chat.output(data.message);
     if(data.success){
-        $('#login').hide();
-        $('#message').show();
+        $('#login').hide('slow');
+        $('#message').show('slow');
+        $('#text').focus();
         
+        $('#text').keyup(function (e){
+            if(e.keyCode == 13){
+                chat.message($('#text').val());
+                $('#text').val('');
+                $('#text').focus();
+            }
+        });
         $('#send').click(function(){
-            chat.message($('#text').attr('value'));
+            chat.message($('#text').val());
+            $('#text').val('');
+            $('#text').focus();
         });
     }
 }
 
 chat.onMessage = function(data){
     data = JSON.parse(data);
-    chat.output(data.text);
+    chat.output(data.from + ': ' + data.text);
 }
   
-chat.onUsers = function(users){
+chat.onList = function(data){
+    data = JSON.parse(data);
     $('#users').empty();
-    $.each(users, function(index, value){
-        $('#users').append($('<li>').text(value));
+    $.each(data.list, function(index, user){
+        $('#users').append($('<li>').text(user));
     });
 }

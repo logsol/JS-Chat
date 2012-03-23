@@ -7,10 +7,7 @@
 body {
     background-color: #111;
 }
-pre, ul, button, input {
-    background-color: #222;
-    color: #ddd ;
-}
+
 input, button {
     padding: 3px 5px;
     margin-right: 5px;
@@ -35,6 +32,7 @@ input, button {
     position: absolute;
     top: 40px;
     left: 10px;
+    overflow-y: scroll;
 }
 #output p {
     padding: 3px;
@@ -47,6 +45,7 @@ input, button {
     left: 620px;
     width: 200px;
     height: 300px;
+    overflow-y: scroll;
 }
 #users li {
     border-bottom: 1px dotted gray;
@@ -69,7 +68,9 @@ input, button {
     width: 590px;
 }
 #message #send {
-    position: absolute;
-    left: 610px;
-    top: 0;
+    margin-left: 3px;
+}
+#output, #users, button, input {
+    background-color: #222;
+    color: #ddd ;
 }

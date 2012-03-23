@@ -1,14 +1,14 @@
 
 var http = require('http')
     , io = require('socket.io');
-
   
 var server = http.createServer()
     , socket = io.listen(server)
     , clients = {}
     , self = this
     , eventMap = {
-        login: login
+        login: onLogin,
+        message: onMessage
     };
 
 exports.run = function(port){
@@ -26,7 +26,7 @@ socket.on('connection', function(link){
         process(link, data);        
     });
     link.on('disconnect',function(){
-        console.log('Client %s has disconnected', link.id);
+        onDisconnect(link);
     });
 });
 
@@ -61,17 +61,62 @@ function emit(client, method, data){
     console.log('emitting: ', method, data);
 }
 
-function login(client, data){
-    client.name = data.name;
-    client.login = true;
-    emit(client, 'login', {
-        success: true, 
-        message: 'Welcome ' + client.name
+function message(to, text, from){
+    from = (from === undefined || from === null) 
+        ? 'server' 
+        : from.name;
+    
+    emit(to, 'message', {
+        text: text,
+        from: from
     });
 }
 
-function message(client, message){
-    emit(client, 'message', {
-        text: message
+function broadcast(text, from){
+    for(var x  in clients){
+        message(clients[x], text, from);
+    }
+}
+
+function list(){
+    var list = [];
+    for(var x  in clients){
+        if(clients[x].login) list.push(clients[x].name);
+    }
+    for(x in clients){
+        emit(clients[x], 'list', {
+            list: list
+        });
+    }
+}
+
+// Events
+
+function onLogin(client, data){
+    client.name = data.name;
+    client.login = true;
+    emit(client, 'login', {
+        success: client.login
     });
+    list(); 
+    broadcast('Welcome ' + client.name);
+}
+
+function onMessage(from, data){
+    broadcast(data.text, from);
+}
+
+function onDisconnect(link){
+    var name, wasLoggedIn = false;
+    for(var x in clients){
+        if(clients[x].link === link){
+            wasLoggedIn = clients[x].login;
+            name = clients[x].name;
+            delete clients[x];
+            break;
+        }
+    }
+    if(wasLoggedIn)
+        list();
+        broadcast(name + ' has left.');
 }
