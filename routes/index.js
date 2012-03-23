@@ -4,20 +4,17 @@
  */
 
 function getHostName(host){
-  return host.match(/^([^:]*)/)[1];
+    return host.match(/^([^:]*)/)[1];
 }
 
 exports.index = function(req, res){
+    var host = getHostName(req.headers.host);
+    var socketPort = 9999;
     
-  console.log(req.headers.host, getHostName(req.headers.host));
-    
-  var host = getHostName(req.headers.host);
-  var socketPort = 9999;
-    
-  res.render('index', {
-    title: 'Express', 
-    host: host,
-    socketPort: socketPort,
-    socketJavascriptFile: 'http://' + host + ':' + socketPort + '/socket.io/socket.io.js'
-  })
+    res.render('index', {
+        title: 'Chat', 
+        host: host,
+        socketPort: socketPort,
+        socketJavascriptFile: 'http://' + host + ':' + socketPort + '/socket.io/socket.io.js'
+    });
 };

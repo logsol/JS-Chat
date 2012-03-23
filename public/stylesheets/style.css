@@ -1,40 +1,75 @@
 * {
-  font-family: arial;
-  padding: 0;
-  margin: 0;
-  font-size: .95em
+    font-family: arial;
+    padding: 0;
+    margin: 0;
+    font-size: 11px;
+}
+body {
+    background-color: #111;
+}
+pre, ul, button, input {
+    background-color: #222;
+    color: #ddd ;
+}
+input, button {
+    padding: 3px 5px;
+    margin-right: 5px;
+    border: 1px solid #aaa;
+}
+
+#hint {
+    background-color: #eee;
+    border: 1px dotted gray;
+    width: 806px;
+    height: 16px;
+    margin: 10px;
+    padding: 2px;
+}
+#chat {
+    display: none;
 }
 #output {
-  border: 1px dotted gray;
-  width: 600px;
-  height: 300px;
-  position: absolute;
-  top: 10px;
-  left: 10px;
+    border: 1px dotted gray;
+    width: 600px;
+    height: 300px;
+    position: absolute;
+    top: 40px;
+    left: 10px;
+}
+#output p {
+    padding: 3px;
 }
 #users {
-  list-style-type: none;
-  border: 1px solid gray;
-  position: absolute;
-  top: 10px;
-  left: 620px;
-  width: 200px;
-  height: 300px;
+    list-style-type: none;
+    border: 1px solid gray;
+    position: absolute;
+    top: 40px;
+    left: 620px;
+    width: 200px;
+    height: 300px;
 }
 #users li {
-  border-bottom: 1px dotted gray;
-  padding: 5px;
+    border-bottom: 1px dotted gray;
+    padding: 5px;
 }
 #message, #login {
-  position: absolute;
-  top: 320px;
-  left: 10px;
+    position: absolute;
+    top: 350px;
+    left: 10px;
 }
-#text {
-  width: 600px;
+#message {
+    display: none;
 }
-#send {
-  position: absolute;
-  left: 610px;
-  top: 0;
+#login #username {
+    width: 300px;
+}
+#login #join {
+}
+#message #text {
+    width: 590px;
+}
+#message #send {
+    position: absolute;
+    left: 610px;
+    top: 0;
 }
