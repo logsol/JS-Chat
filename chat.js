@@ -59,11 +59,6 @@ function emit(client, method, data){
 }
 
 function message(to, text, from){
-    if(from === undefined || from === null){
-        from = server;
-    } else if(from.name){
-        
-    }
     from = (from === undefined || from === null) 
         ? 'server' 
         : from.name;
