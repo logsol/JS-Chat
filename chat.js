@@ -31,7 +31,6 @@ socket.on('connection', function(link){
 });
 
 function register(link){
-    console.log('Client %s has connected', link.id);
     clients[link.id] = {
         id: link.id,
         name: null,
@@ -50,7 +49,6 @@ function process(link, packet){
         eventMap[packet.method](client, packet.data);
     } else {
         error = 'call of undefined method ' + packet.method;
-        console.log(error);
         emit(client, 'error', {message: error});
     }
 }
@@ -58,10 +56,14 @@ function process(link, packet){
 function emit(client, method, data){
     data = JSON.stringify(data);
     client.link.emit(method, data);
-    console.log('emitting: ', method, data);
 }
 
 function message(to, text, from){
+    if(from === undefined || from === null){
+        from = server;
+    } else if(from.name){
+        
+    }
     from = (from === undefined || from === null) 
         ? 'server' 
         : from.name;
