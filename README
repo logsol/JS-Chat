@@ -1,0 +1,5 @@
+A chat system written in JavaScript. Using node.js, express, socket.io and jQuery.
+
+To try it, clone it and run node app.js. Note that the Webinterface will be on http://your.machine:8888
+
+The Websocket will run on Port 9999. If you want to change this, alter app.js
