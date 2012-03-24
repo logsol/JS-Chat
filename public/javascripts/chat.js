@@ -15,6 +15,8 @@ chat.init = function(){
     $('#output p a').live('click', function(){
         $(this).css('color', 'gray');
     });
+    
+    $('#username').val('nickname');
 }
 
 chat.registerEvents = function(){
@@ -67,6 +69,7 @@ chat.onConnect = function(){
     $('#chat').show('slow');
     $('#hint').text('connected');
     $('#username').focus();
+    $('#username').select();
     $('#join').click(chat.login);
     $('#username').keyup(function (e){
         if(e.keyCode == 13){
