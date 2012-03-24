@@ -14,6 +14,13 @@ input, button {
     border: 1px solid #aaa;
 }
 
+a {
+    color: darkorange;
+}
+a:visited {
+    color: gray;
+}
+
 #hint {
     background-color: #eee;
     border: 1px dotted gray;

@@ -4,11 +4,18 @@ var chat = new Connector();
 // Methods
 
 chat.run = function(host, port){
-    $('#chat').hide();
-    $('#hint').text('connecting').show();
+    chat.init();
     chat.connect(host, port);
     chat.registerEvents();
 };
+
+chat.init = function(){
+    $('#chat').hide();
+    $('#hint').text('connecting').show();
+    $('#output p a').live('click', function(){
+        $(this).css('color', 'gray');
+    });
+}
 
 chat.registerEvents = function(){
     chat.registerEvent('error', chat.onError);
@@ -22,8 +29,10 @@ chat.registerEvents = function(){
 }
 
 chat.output = function(text){
-    $('#output').append($('<p></p>').text(text));
-    $("#output").animate({ scrollTop: $("#output").prop('scrollHeight') }, "slow");
+    var p = $('<p></p>').text(text);
+    p.html(chat.linkify(p.text()));
+    $('#output').append(p);
+    $("#output").animate({scrollTop: $("#output").prop('scrollHeight')}, "slow");
 }
 
 chat.login = function(){
@@ -100,3 +109,4 @@ chat.onList = function(data){
         $('#users').append($('<li>').text(user));
     });
 }
+
