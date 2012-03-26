@@ -4,7 +4,7 @@
  */
 
 var express = require('express')
-    , routes = require('./routes')
+    , router = require('./router')
     , chat = require('./chat');
 
 var app = module.exports = express.createServer();
@@ -16,8 +16,8 @@ app.configure(function(){
     app.set('view engine', 'jade');
     app.use(express.bodyParser());
     app.use(express.methodOverride());
-    app.use(app.router);
     app.use(express.static(__dirname + '/public'));
+    app.use(app.router);
 });
 
 app.configure('development', function(){
@@ -33,7 +33,7 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', routes.index);
+app.get('*', router.route);
 
 app.listen(8888);
 chat.run(9999);
