@@ -5,7 +5,7 @@ var http = require('http')
 var server = http.createServer()
     , socket = io.listen(server)
     , clients = {}
-    , channels = {},
+    , channels = {}
     , self = this
     , eventMap = {
         login: onLogin,
@@ -61,6 +61,25 @@ function emit(to, method, data){
 }
 
 function message(to, text, from){
+    
+    var match, leavingChannel;
+    
+    if(match = text.match(/\/nick (.*)/)) {
+        broadcast(from.channel, from.name + ' is now called ' + match[1]);
+        from.name = match[1];
+        emitListUpdate(from.channel);
+        return;
+    }
+    
+    if(match = text.match(/\/join (.*)/)) {
+        if(match[1] == from.channel.name) return;
+        leavingChannel = from.channel;
+        broadcast(leavingChannel, from.name + ' has gone to ' + match[1]);
+        joinChannel(from, match[1]);
+        emitListUpdate(leavingChannel);
+        return;
+    }
+    
     from = (from === undefined || from === null) 
         ? 'server' 
         : from.name;
@@ -73,7 +92,7 @@ function message(to, text, from){
 
 function broadcast(channel, text, from){
     for(var x  in channel.clients){
-        message(clients[x], text, from);
+        message(channel.clients[x], text, from);
     }
 }
 
@@ -90,17 +109,28 @@ function emitListUpdate(channel){
 }
 
 function joinChannel(client, channelName){
-    var channel;
+    var channel, clients;
+    
+    if(client.channel){
+        delete client.channel.clients[client.id];
+    }
+    
     if(channels[channelName]){
         channel = channels[channelName];
+        channel.clients[client.id] = client;
     } else {
+        clients = {};
+        clients[client.id] = client;
         channel = {
             name: channelName,
-            clients: [client]
+            clients: clients
         }
         channels[channelName] = channel;
     }
     client.channel = channel;
+    
+    emitListUpdate(client.channel); 
+    broadcast(client.channel, 'Welcome to ' + client.channel.name + ', ' + client.name + '!');
 }
 
 // Events
@@ -112,8 +142,6 @@ function onLogin(client, data){
     emit(client, 'login', {
         success: client.login
     });
-    emitListUpdate(client.channel); 
-    broadcast(client.channel, 'Welcome to ' + client.channel.name + ', ' + client.name + '!');
 }
 
 function onMessage(from, data){
