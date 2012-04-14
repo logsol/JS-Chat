@@ -5,6 +5,7 @@ var http = require('http')
 var server = http.createServer()
     , socket = io.listen(server)
     , clients = {}
+    , channels = {},
     , self = this
     , eventMap = {
         login: onLogin,
@@ -35,7 +36,8 @@ function register(link){
         id: link.id,
         name: null,
         login: false,
-        link: link
+        link: link,
+        channel: null
     };
 }
 
@@ -53,9 +55,9 @@ function process(link, packet){
     }
 }
 
-function emit(client, method, data){
+function emit(to, method, data){
     data = JSON.stringify(data);
-    client.link.emit(method, data);
+    to.link.emit(method, data);
 }
 
 function message(to, text, from){
@@ -69,22 +71,36 @@ function message(to, text, from){
     });
 }
 
-function broadcast(text, from){
-    for(var x  in clients){
+function broadcast(channel, text, from){
+    for(var x  in channel.clients){
         message(clients[x], text, from);
     }
 }
 
-function list(){
+function emitListUpdate(channel){
     var list = [];
-    for(var x  in clients){
-        if(clients[x].login) list.push(clients[x].name);
+    for(var x  in channel.clients){
+        if(channel.clients[x].login) list.push(channel.clients[x].name);
     }
-    for(x in clients){
-        emit(clients[x], 'list', {
+    for(x in channel.clients){
+        emit(channel.clients[x], 'list', {
             list: list
         });
     }
+}
+
+function joinChannel(client, channelName){
+    var channel;
+    if(channels[channelName]){
+        channel = channels[channelName];
+    } else {
+        channel = {
+            name: channelName,
+            clients: [client]
+        }
+        channels[channelName] = channel;
+    }
+    client.channel = channel;
 }
 
 // Events
@@ -92,29 +108,31 @@ function list(){
 function onLogin(client, data){
     client.name = data.name;
     client.login = true;
+    joinChannel(client, data.channel);
     emit(client, 'login', {
         success: client.login
     });
-    list(); 
-    broadcast('Welcome ' + client.name + '!');
+    emitListUpdate(client.channel); 
+    broadcast(client.channel, 'Welcome to ' + client.channel.name + ', ' + client.name + '!');
 }
 
 function onMessage(from, data){
-    broadcast(data.text, from);
+    if(from.login){
+        broadcast(from.channel, data.text, from);
+    }
 }
 
 function onDisconnect(link){
-    var name, wasLoggedIn = false;
+    var client;
     for(var x in clients){
         if(clients[x].link === link){
-            wasLoggedIn = clients[x].login;
-            name = clients[x].name;
+            client = clients[x];
             delete clients[x];
             break;
         }
     }
-    if(wasLoggedIn){   
-        list();
-        broadcast(name + ' has left.');
+    if(client.login){   
+        emitListUpdate(client.channel);
+        broadcast(client.channel = client.name + ' has left.');
     }
 }

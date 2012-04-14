@@ -41,7 +41,8 @@ chat.login = function(){
     var name = $("#username").attr('value');
     
     chat.send('login', {
-        name: name
+        name: name,
+        channel: 'lobby'
     });
 };
 
